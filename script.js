@@ -48,7 +48,7 @@ function addRow(typeData) {
     // Celda para el SVG del tipo
     const typeCell = document.createElement('td');
     typeCell.innerHTML = `
-        <img src="img/${typeData.name}.svg" alt="${translations[typeData.name]}" class="type-icon">
+        <img src="./img/${typeData.name}.svg" alt="${translations[typeData.name]}" class="type-icon">
     `;
     row.appendChild(typeCell);
 
