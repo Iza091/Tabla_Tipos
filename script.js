@@ -55,21 +55,21 @@ function addRow(typeData) {
     // Fuerte contra
     const strongAgainstCell = document.createElement('td');
     strongAgainstCell.innerHTML = typeData.damage_relations.double_damage_to.map(type => `
-        <img src="img/${type.name}.svg" alt="${translations[type.name]}" class="type-icon">
+        <img src="./img/${type.name}.svg" alt="${translations[type.name]}" class="type-icon">
     `).join(', ') || '-';
     row.appendChild(strongAgainstCell);
 
     // Débil contra
     const weakAgainstCell = document.createElement('td');
     weakAgainstCell.innerHTML = typeData.damage_relations.double_damage_from.map(type => `
-        <img src="img/${type.name}.svg" alt="${translations[type.name]}" class="type-icon">
+        <img src="./img/${type.name}.svg" alt="${translations[type.name]}" class="type-icon">
     `).join(', ') || '-';
     row.appendChild(weakAgainstCell);
 
     // Inmune contra
     const immuneAgainstCell = document.createElement('td');
     immuneAgainstCell.innerHTML = typeData.damage_relations.no_damage_from.map(type => `
-        <img src="img/${type.name}.svg" alt="${translations[type.name]}" class="type-icon">
+        <img src="./img/${type.name}.svg" alt="${translations[type.name]}" class="type-icon">
     `).join(', ') || '-';
     row.appendChild(immuneAgainstCell);
 
