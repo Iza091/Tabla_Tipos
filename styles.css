@@ -1,19 +1,101 @@
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f5f5f5;
     text-align: center;
+    margin: 0;
+    padding: 0;
 }
 
-h1 {
-    color: #333;
-    margin-top: 20px;
-}
-
+/* Estilos generales */
 table {
     width: 80%;
     margin: 20px auto;
     border-collapse: collapse;
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Bordes más visibles */
+th, td {
+    padding: 15px;
+    text-align: center;
+    border: 2px solid #ddd; /* Aumenta el grosor del borde */
+}
+
+/* Alternar colores de filas */
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+/* Sombreado al pasar el ratón sobre la fila */
+tbody tr:hover {
+    background-color: #e0e0e0;
+    transition: background-color 0.3s ease;
+}
+
+/* Colores de fondo por columna */
+th {
+    background-color: #333;
+    color: white;
+}
+
+td:nth-child(2) { /* Eficaz contra */
+    background-color: #b9e8b9; /* Verde claro */
+}
+
+td:nth-child(3) { /* Débil contra */
+    background-color: #e9b4b4; /* Rojo claro */
+}
+
+td:nth-child(4) { /* Resistente contra */
+    background-color: #dede9b; /* Amarillo claro */
+}
+
+td:nth-child(5) { /* Inmune */
+    background-color: #c1bfbf; /* Gris claro */
+}
+
+/* Estilos para el contenedor de cada tipo (imagen + nombre) */
+.type-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 5px;
+}
+
+/* Alinea los nombres debajo de las imágenes */
+.type-name {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #333;
+}
+
+
+header {
+    
+    color: rgb(0, 0, 0);
+    padding: 15px 0;
+}
+
+main {
+    width: 90%;
+    margin: 0 auto;
+}
+
+h1 {
+    margin: 0;
+}
+
+table {
+    width: 100%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    background-color: white;
 }
 
 th, td {
@@ -23,7 +105,7 @@ th, td {
 }
 
 th {
-    background-color: #4CAF50;
+    
     color: white;
 }
 
@@ -34,17 +116,53 @@ tbody tr:nth-child(even) {
 tbody tr:hover {
     background-color: #ddd;
 }
-/* General */
-.type {
-    padding: 5px 10px;
-    color: rgb(0, 0, 0);
-    border-radius: 5px;
-    text-transform: capitalize;
+
+/* Ajustar para pantallas pequeñas */
+@media (max-width: 768px) {
+    table {
+        width: 100%;
+    }
+    
+    th, td {
+        padding: 10px;
+    }
 }
 
+/* Iconos de tipo */
 .type-icon {
-    width: 40px; /* Ajusta el tamaño según sea necesario */
-    height: 40px; /* Ajusta el tamaño según sea necesario */
-    margin: 0 auto; /* Centra la imagen en la celda */
-    display: block; /* Asegura que las imágenes se comporten como bloques */
+    width: 40px; 
+    height: 40px; 
+    display: block; 
+    margin: 0 auto;
+    border-radius: 50%; /* Le da una forma más estética */
+    transition: transform 0.2s ease-in-out; /* Suaviza el hover */
+}
+
+/* Efecto hover en iconos */
+.type-icon:hover {
+    transform: scale(1.2); /* Amplía ligeramente el icono */
+}
+
+/* Mejora de accesibilidad */
+img[type-icon] {
+    alt: "Ícono de tipo de Pokémon"; /* Añade accesibilidad a las imágenes */
+}
+
+td img {
+    margin: 5px; /* Espaciado entre los íconos */
+}
+
+/* Estilos para el contenedor de cada tipo (imagen + nombre) */
+.type-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 5px;
+}
+
+/* Alinea los nombres debajo de las imágenes */
+.type-name {
+    margin-top: 5px;
+    font-size: 14px; /* Ajusta el tamaño según sea necesario */
+    color: #333;
 }

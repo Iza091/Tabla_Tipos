@@ -3,24 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/png" href="./img/Pokeball.png" />
     <title>Tabla de Tipos Pokémon</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Tabla de Tipos Pokémon</h1>
-    <table id="pokemon-type-chart">
-        <thead>
-            <tr>
-                <th>Tipo</th>
-                <th>Eficaz</th>
-                <th>No es muy Eficaz</th>
-                <th>Inmune</th>
-            </tr>
-        </thead>
-        <tbody id="type-table-body">
-            <!-- El contenido será llenado por JavaScript -->
-        </tbody>
-    </table>
+    <header>
+        <h1>Tabla de Tipos Pokémon</h1>
+    </header>
+    
+    <main>
+        <table id="pokemon-type-chart">
+            <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Eficaz contra</th>
+                    <th>Débil contra</th>
+                    <th>Resistente contra</th>
+                    <th>Inmune</th>
+            </thead>
+            <tbody id="type-table-body">
+                <!-- Aquí se llena por Js-->
+            </tbody>
+        </table>
+    </main>
+    
     <script src="script.js"></script>
 </body>
 </html>
