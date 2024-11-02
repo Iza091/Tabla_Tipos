@@ -1,168 +1,206 @@
+/* Contenedor principal */
+#main-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
 
-body {
-    font-family: Arial, sans-serif;
+/* Contenedor de búsqueda */
+.search-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+    padding: 20px;
     background-color: #f5f5f5;
-    text-align: center;
-    margin: 0;
-    padding: 0;
+    border-radius: 8px;
 }
 
-/* Estilos generales */
-table {
-    width: 80%;
-    margin: 20px auto;
-    border-collapse: collapse;
-    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+/* Contenedor personalizado para el select */
+.custom-select-container {
+    position: relative;
+    min-width: 250px;
 }
 
-/* Bordes más visibles */
-th, td {
-    padding: 15px;
-    text-align: center;
-    border: 2px solid #ddd; /* Aumenta el grosor del borde */
+.selected-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+    user-select: none;
 }
 
-/* Alternar colores de filas */
-tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+.selected-option .arrow {
+    margin-left: auto;
+    width: 12px;
+    height: 12px;
+    border-right: 2px solid #666;
+    border-bottom: 2px solid #666;
+    transform: rotate(45deg);
+    transition: transform 0.3s;
 }
 
-tbody tr:nth-child(odd) {
-    background-color: #ffffff;
+.selected-option.active .arrow {
+    transform: rotate(-135deg);
 }
 
-/* Sombreado al pasar el ratón sobre la fila */
-tbody tr:hover {
-    background-color: #e0e0e0;
-    transition: background-color 0.3s ease;
+.options-list {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: white;
+    border: 2px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
 }
 
-/* Colores de fondo por columna */
-th {
-    background-color: #333;
+.option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.option:hover {
+    background-color: #f5f5f5;
+}
+
+.option img, .selected-type-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Botón de búsqueda */
+#search-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #37343d;
     color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-td:nth-child(2) { /* Eficaz contra */
-    background-color: #b9e8b9; /* Verde claro */
+#search-button:hover {
+    background-color: #000000;
 }
 
-td:nth-child(3) { /* Débil contra */
-    background-color: #e9b4b4; /* Rojo claro */
+/* Tarjeta de resultados */
+.type-result-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-td:nth-child(4) { /* Resistente contra */
-    background-color: #dede9b; /* Amarillo claro */
+/* Encabezado del tipo */
+.type-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #eee;
 }
 
-td:nth-child(5) { /* Inmune */
-    background-color: #c1bfbf; /* Gris claro */
+.type-header h2 {
+    margin: 0;
+    font-size: 24px;
 }
 
-/* Estilos para el contenedor de cada tipo (imagen + nombre) */
+/* Secciones de relaciones */
+.relation-section {
+    margin: 15px 0;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 6px;
+}
+
+.relation-section h3 {
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+/* Lista de tipos */
+.types-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: flex-start;
+}
+
+/* Contenedor de tipo individual */
 .type-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 5px;
+    padding: 10px;
+    border-radius: 6px;
+    min-width: 100px;
 }
 
-/* Alinea los nombres debajo de las imágenes */
+/* Estilos específicos para cada tipo de relación */
+.effective {
+    background-color: #b9e8b9;
+}
+
+.weak {
+    background-color: #e9b4b4;
+}
+
+.resistant {
+    background-color: #dede9b;
+}
+
+.immune {
+    background-color: #c1bfbf;
+}
+
+/* Íconos de tipo */
+.type-icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 5px;
+}
+
+/* Nombre del tipo */
 .type-name {
-    margin-top: 5px;
     font-size: 14px;
     color: #333;
 }
 
-
-header {
-    
-    color: rgb(0, 0, 0);
-    padding: 15px 0;
-}
-
-main {
-    width: 90%;
-    margin: 0 auto;
-}
-
 h1 {
     margin: 0;
-}
-
-table {
-    width: 100%;
-    margin: 20px auto;
-    border-collapse: collapse;
-    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
-    background-color: white;
-}
-
-th, td {
-    padding: 15px;
     text-align: center;
-    border: 1px solid #ddd;
+    padding: 20px 0;
 }
 
-th {
-    
-    color: white;
-}
+/* Responsive */
+@media (max-width: 600px) {
+    .search-container {
+        flex-direction: column;
+    }
 
-tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-tbody tr:hover {
-    background-color: #ddd;
-}
-
-/* Ajustar para pantallas pequeñas */
-@media (max-width: 768px) {
-    table {
+    .custom-select-container {
         width: 100%;
     }
-    
-    th, td {
-        padding: 10px;
+
+    .types-list {
+        justify-content: center;
     }
-}
 
-/* Iconos de tipo */
-.type-icon {
-    width: 40px; 
-    height: 40px; 
-    display: block; 
-    margin: 0 auto;
-    border-radius: 50%; /* Le da una forma más estética */
-    transition: transform 0.2s ease-in-out; /* Suaviza el hover */
-}
-
-/* Efecto hover en iconos */
-.type-icon:hover {
-    transform: scale(1.2); /* Amplía ligeramente el icono */
-}
-
-/* Mejora de accesibilidad */
-img[type-icon] {
-    alt: "Ícono de tipo de Pokémon"; /* Añade accesibilidad a las imágenes */
-}
-
-td img {
-    margin: 5px; /* Espaciado entre los íconos */
-}
-
-/* Estilos para el contenedor de cada tipo (imagen + nombre) */
-.type-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 5px;
-}
-
-/* Alinea los nombres debajo de las imágenes */
-.type-name {
-    margin-top: 5px;
-    font-size: 14px; /* Ajusta el tamaño según sea necesario */
-    color: #333;
+    #search-button {
+        width: 100%;
+    }
 }
