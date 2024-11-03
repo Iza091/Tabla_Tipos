@@ -9,20 +9,53 @@ const translations = {
     steel: 'Acero', fairy: 'Hada'
 };
 
-// Objeto para almacenar los datos de tipos
+// Variables globales
 let typeDataCache = {};
-let selectedType = '';
+let selectedMode = '';
+let selectedPrimaryType = '';
+let selectedSecondaryType = '';
 
-// Función para crear el formulario de búsqueda
-function createSearchForm() {
-    const searchContainer = document.createElement('div');
-    searchContainer.className = 'search-container';
+// Función para crear el selector de modo
+function createModeSelector() {
+    const modeContainer = document.createElement('div');
+    modeContainer.className = 'mode-selector';
 
-    // Crear el contenedor del select personalizado
+    const modeTitle = document.createElement('h3');
+    modeTitle.textContent = '¿Qué deseas buscar?';
+    modeContainer.appendChild(modeTitle);
+
+    const buttonContainer = document.createElement('div');
+    buttonContainer.className = 'mode-buttons';
+
+    const singleButton = document.createElement('button');
+    singleButton.textContent = 'Pokémon de un tipo';
+    singleButton.className = 'mode-button';
+    singleButton.onclick = () => selectMode('single');
+
+    const dualButton = document.createElement('button');
+    dualButton.textContent = 'Pokémon de dos tipos';
+    dualButton.className = 'mode-button';
+    dualButton.onclick = () => selectMode('dual');
+
+    buttonContainer.appendChild(singleButton);
+    buttonContainer.appendChild(dualButton);
+    modeContainer.appendChild(buttonContainer);
+
+    return modeContainer;
+}
+
+// Función para crear el selector de tipos
+function createTypeSelector(isSecondary = false) {
+    const selectorContainer = document.createElement('div');
+    selectorContainer.className = `type-selector ${isSecondary ? 'secondary' : 'primary'}`;
+
+    const selectorTitle = document.createElement('h3');
+    selectorTitle.textContent = isSecondary ? 'Selecciona el tipo secundario:' : 'Selecciona el tipo primario:';
+    selectorContainer.appendChild(selectorTitle);
+
     const customSelect = document.createElement('div');
     customSelect.className = 'custom-select-container';
 
-    // Crear el elemento que muestra la selección actual
     const selectedOption = document.createElement('div');
     selectedOption.className = 'selected-option';
     selectedOption.innerHTML = `
@@ -31,12 +64,15 @@ function createSearchForm() {
         <div class="arrow"></div>
     `;
 
-    // Crear la lista de opciones
     const optionsList = document.createElement('div');
     optionsList.className = 'options-list';
 
-    // Agregar todas las opciones de tipos
-    validTypes.forEach(type => {
+    // Filtrar tipos disponibles
+    let availableTypes = isSecondary ? 
+        validTypes.filter(type => type !== selectedPrimaryType) : 
+        validTypes;
+
+    availableTypes.forEach(type => {
         const option = document.createElement('div');
         option.className = 'option';
         option.dataset.value = type;
@@ -44,40 +80,22 @@ function createSearchForm() {
             <img src="./img/${type}.svg" alt="${translations[type]}">
             <span>${translations[type]}</span>
         `;
+        option.addEventListener('click', () => handleTypeSelection(type, isSecondary));
         optionsList.appendChild(option);
     });
 
-    // Agregar elementos al contenedor del select
     customSelect.appendChild(selectedOption);
     customSelect.appendChild(optionsList);
+    selectorContainer.appendChild(customSelect);
 
-    // Manejar la apertura/cierre del select
-    selectedOption.addEventListener('click', () => {
+    // Event listener para abrir/cerrar el selector
+    selectedOption.addEventListener('click', (e) => {
         const isOpen = optionsList.style.display === 'block';
         optionsList.style.display = isOpen ? 'none' : 'block';
         selectedOption.classList.toggle('active', !isOpen);
     });
 
-    // Manejar la selección de opciones
-    optionsList.addEventListener('click', (e) => {
-        const option = e.target.closest('.option');
-        if (option) {
-            const value = option.dataset.value;
-            const selectedIcon = selectedOption.querySelector('.selected-type-icon');
-            const selectedText = selectedOption.querySelector('span');
-
-            selectedType = value; // Actualizar el tipo seleccionado
-            selectedIcon.src = `./img/${value}.svg`;
-            selectedIcon.alt = translations[value];
-            selectedIcon.style.display = 'block';
-            selectedText.textContent = translations[value];
-
-            optionsList.style.display = 'none';
-            selectedOption.classList.remove('active');
-        }
-    });
-
-    // Cerrar el select cuando se hace clic fuera
+    // Cerrar al hacer clic fuera
     document.addEventListener('click', (e) => {
         if (!customSelect.contains(e.target)) {
             optionsList.style.display = 'none';
@@ -85,40 +103,202 @@ function createSearchForm() {
         }
     });
 
-    // Crear botón de búsqueda
-    const searchButton = document.createElement('button');
-    searchButton.textContent = 'Buscar';
-    searchButton.id = 'search-button';
-
-    // Agregar elementos al contenedor principal
-    searchContainer.appendChild(customSelect);
-    searchContainer.appendChild(searchButton);
-
-    return searchContainer;
+    return selectorContainer;
 }
 
-// Función para mostrar los resultados de la búsqueda
-function displaySearchResults(typeData) {
+// Función para manejar la selección de tipo
+function handleTypeSelection(type, isSecondary) {
+    if (isSecondary) {
+        selectedSecondaryType = type;
+    } else {
+        selectedPrimaryType = type;
+        if (selectedMode === 'dual') {
+            selectedSecondaryType = ''; // Resetear tipo secundario
+        }
+    }
+    
+    updateUI();
+}
+
+// Función para actualizar la UI
+function updateUI() {
+    const searchContainer = document.querySelector('.search-container');
+    searchContainer.innerHTML = '';
+
+    // Agregar selector de modo
+    const modeSelector = createModeSelector();
+    searchContainer.appendChild(modeSelector);
+
+    // Actualizar botones de modo
+    document.querySelectorAll('.mode-button').forEach(button => {
+        button.classList.remove('active');
+        if (button.textContent.includes(selectedMode === 'single' ? 'un tipo' : 'dos tipos')) {
+            button.classList.add('active');
+        }
+    });
+
+    // Agregar selector de tipo primario
+    if (selectedMode) {
+        const primarySelector = createTypeSelector(false);
+        searchContainer.appendChild(primarySelector);
+
+        // Actualizar UI del tipo primario si está seleccionado
+        if (selectedPrimaryType) {
+            const primarySelectedOption = primarySelector.querySelector('.selected-option');
+            const primaryIcon = primarySelectedOption.querySelector('.selected-type-icon');
+            const primaryText = primarySelectedOption.querySelector('span');
+            primaryIcon.src = `./img/${selectedPrimaryType}.svg`;
+            primaryIcon.alt = translations[selectedPrimaryType];
+            primaryIcon.style.display = 'block';
+            primaryText.textContent = translations[selectedPrimaryType];
+        }
+
+        // Agregar selector de tipo secundario en modo dual
+        if (selectedMode === 'dual' && selectedPrimaryType) {
+            const secondarySelector = createTypeSelector(true);
+            searchContainer.appendChild(secondarySelector);
+
+            // Actualizar UI del tipo secundario si está seleccionado
+            if (selectedSecondaryType) {
+                const secondarySelectedOption = secondarySelector.querySelector('.selected-option');
+                const secondaryIcon = secondarySelectedOption.querySelector('.selected-type-icon');
+                const secondaryText = secondarySelectedOption.querySelector('span');
+                secondaryIcon.src = `./img/${selectedSecondaryType}.svg`;
+                secondaryIcon.alt = translations[selectedSecondaryType];
+                secondaryIcon.style.display = 'block';
+                secondaryText.textContent = translations[selectedSecondaryType];
+            }
+        }
+
+        // Mostrar botón de búsqueda si se han seleccionado los tipos necesarios
+        if ((selectedMode === 'single' && selectedPrimaryType) || 
+            (selectedMode === 'dual' && selectedPrimaryType && selectedSecondaryType)) {
+            const searchButton = document.createElement('button');
+            searchButton.textContent = 'Buscar';
+            searchButton.id = 'search-button';
+            searchButton.onclick = handleSearch;
+            searchContainer.appendChild(searchButton);
+        }
+    }
+}
+
+// Función para seleccionar modo
+function selectMode(mode) {
+    selectedMode = mode;
+    selectedPrimaryType = '';
+    selectedSecondaryType = '';
+    updateUI();
+}
+
+
+// Función para manejar la búsqueda
+async function handleSearch() {
+    if (!selectedPrimaryType || (selectedMode === 'dual' && !selectedSecondaryType)) {
+        return;
+    }
+
+    try {
+        if (selectedMode === 'single') {
+            // Búsqueda de un solo tipo
+            if (!typeDataCache[selectedPrimaryType]) {
+                const response = await fetch(`https://pokeapi.co/api/v2/type/${selectedPrimaryType}`);
+                typeDataCache[selectedPrimaryType] = await response.json();
+            }
+            displaySearchResults(typeDataCache[selectedPrimaryType]);
+        } else {
+            // Búsqueda de tipo dual
+            const combinedData = await calculateCombinedEffectiveness(selectedPrimaryType, selectedSecondaryType);
+            displaySearchResults(combinedData, true);
+        }
+    } catch (error) {
+        console.error('Error fetching type data:', error);
+        alert('Error al obtener los datos del tipo Pokémon');
+    }
+}
+
+// Función para calcular efectividades combinadas
+async function calculateCombinedEffectiveness(primaryType, secondaryType) {
+    try {
+        // Obtener datos de ambos tipos
+        const [primaryData, secondaryData] = await Promise.all([
+            typeDataCache[primaryType] || 
+                fetch(`https://pokeapi.co/api/v2/type/${primaryType}`).then(r => r.json()),
+            typeDataCache[secondaryType] || 
+                fetch(`https://pokeapi.co/api/v2/type/${secondaryType}`).then(r => r.json())
+        ]);
+
+        // Cachear los datos
+        typeDataCache[primaryType] = primaryData;
+        typeDataCache[secondaryType] = secondaryData;
+
+        // Combinar efectividades
+        const effectiveness = {
+            name: `${primaryType}/${secondaryType}`,
+            damage_relations: {
+                double_damage_from: [],
+                half_damage_from: [],
+                no_damage_from: [],
+                double_damage_to: [],
+                half_damage_to: [],
+                no_damage_to: []
+            }
+        };
+
+        // Procesar relaciones de daño
+        const processRelations = (relations, category) => {
+            relations.forEach(type => {
+                const existingType = effectiveness.damage_relations[category].find(t => t.name === type.name);
+                if (!existingType) {
+                    effectiveness.damage_relations[category].push(type);
+                }
+            });
+        };
+
+        // Combinar relaciones de ambos tipos
+        ['double_damage_from', 'half_damage_from', 'no_damage_from', 
+         'double_damage_to', 'half_damage_to', 'no_damage_to'].forEach(category => {
+            processRelations(primaryData.damage_relations[category], category);
+            processRelations(secondaryData.damage_relations[category], category);
+        });
+
+        return effectiveness;
+    } catch (error) {
+        console.error('Error calculating combined effectiveness:', error);
+        throw error;
+    }
+}
+
+// Función para mostrar los resultados
+function displaySearchResults(typeData, isDualType = false) {
     const resultsContainer = document.getElementById('results-container');
-    resultsContainer.innerHTML = ''; // Limpiar resultados anteriores
+    resultsContainer.innerHTML = '';
 
-    if (!typeData) return; // Si no hay datos, solo limpiamos
-
-    // Crear contenedor para los resultados
     const resultCard = document.createElement('div');
     resultCard.className = 'type-result-card';
 
-    // Mostrar el tipo seleccionado
+    // Mostrar encabezado
     const typeHeader = document.createElement('div');
     typeHeader.className = 'type-header';
-    typeHeader.innerHTML = `
-        <img src="./img/${typeData.name}.svg" alt="${translations[typeData.name]}" class="type-icon">
-        <h2>${translations[typeData.name]}</h2>
-    `;
+    
+    if (isDualType) {
+        typeHeader.innerHTML = `
+            <div class="dual-type-header">
+                <img src="./img/${selectedPrimaryType}.svg" alt="${translations[selectedPrimaryType]}" class="type-icon">
+                <span>/</span>
+                <img src="./img/${selectedSecondaryType}.svg" alt="${translations[selectedSecondaryType]}" class="type-icon">
+                <h2>${translations[selectedPrimaryType]} / ${translations[selectedSecondaryType]}</h2>
+            </div>
+        `;
+    } else {
+        typeHeader.innerHTML = `
+            <img src="./img/${typeData.name}.svg" alt="${translations[typeData.name]}" class="type-icon">
+            <h2>${translations[typeData.name]}</h2>
+        `;
+    }
     resultCard.appendChild(typeHeader);
 
-    // Función helper para crear sección de relaciones
-    function createRelationSection(title, relations, relationClass) {
+    // Mostrar relaciones de daño
+    const createRelationSection = (title, relations, relationClass) => {
         const section = document.createElement('div');
         section.className = 'relation-section';
         
@@ -155,7 +335,7 @@ function displaySearchResults(typeData) {
 
         section.appendChild(typesList);
         return section;
-    }
+    };
 
     // Agregar secciones de relaciones
     resultCard.appendChild(createRelationSection('Eficaz contra:', 
@@ -171,46 +351,25 @@ function displaySearchResults(typeData) {
 }
 
 // Función para inicializar la aplicación
-async function initializeApp() {
-    // Crear contenedor principal si no existe
+function initializeApp() {
     const mainContainer = document.createElement('div');
     mainContainer.id = 'main-container';
     
-    // Agregar título
     const title = document.createElement('h1');
     title.textContent = 'Buscador de Tipos Pokémon';
     mainContainer.appendChild(title);
     
-    document.body.appendChild(mainContainer);
+    const searchContainer = document.createElement('div');
+    searchContainer.className = 'search-container';
+    mainContainer.appendChild(searchContainer);
 
-    // Agregar el formulario de búsqueda
-    const searchForm = createSearchForm();
-    mainContainer.appendChild(searchForm);
-
-    // Crear contenedor para resultados
     const resultsContainer = document.createElement('div');
     resultsContainer.id = 'results-container';
     mainContainer.appendChild(resultsContainer);
 
-    // Agregar event listener para el botón de búsqueda
-    document.getElementById('search-button').addEventListener('click', async () => {
-        if (!selectedType) {
-            displaySearchResults(null); // Limpiar resultados si no hay tipo seleccionado
-            return;
-        }
-
-        try {
-            // Usar caché si existe, si no, hacer fetch
-            if (!typeDataCache[selectedType]) {
-                const response = await fetch(`https://pokeapi.co/api/v2/type/${selectedType}`);
-                typeDataCache[selectedType] = await response.json();
-            }
-            displaySearchResults(typeDataCache[selectedType]);
-        } catch (error) {
-            console.error('Error fetching type data:', error);
-            alert('Error al obtener los datos del tipo Pokémon');
-        }
-    });
+    document.body.appendChild(mainContainer);
+    
+    updateUI();
 }
 
 // Inicializar cuando el DOM esté cargado
