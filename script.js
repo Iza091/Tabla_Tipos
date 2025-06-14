@@ -118,6 +118,12 @@ function handleTypeSelection(type, isSecondary) {
     }
     
     updateUI();
+
+    // Lanzar búsqueda automática si corresponde
+    if ((selectedMode === 'single' && selectedPrimaryType) ||
+        (selectedMode === 'dual' && selectedPrimaryType && selectedSecondaryType)) {
+        handleSearch();
+    }
 }
 
 // Función para actualizar la UI
@@ -169,16 +175,6 @@ function updateUI() {
                 secondaryText.textContent = translations[selectedSecondaryType];
             }
         }
-
-        // Mostrar botón de búsqueda si se han seleccionado los tipos necesarios
-        if ((selectedMode === 'single' && selectedPrimaryType) || 
-            (selectedMode === 'dual' && selectedPrimaryType && selectedSecondaryType)) {
-            const searchButton = document.createElement('button');
-            searchButton.textContent = 'Buscar';
-            searchButton.id = 'search-button';
-            searchButton.onclick = handleSearch;
-            searchContainer.appendChild(searchButton);
-        }
     }
 }
 
@@ -188,8 +184,8 @@ function selectMode(mode) {
     selectedPrimaryType = '';
     selectedSecondaryType = '';
     updateUI();
+    document.getElementById('results-container').innerHTML = '';
 }
-
 
 // Función para manejar la búsqueda
 async function handleSearch() {
@@ -352,23 +348,6 @@ function displaySearchResults(typeData, isDualType = false) {
 
 // Función para inicializar la aplicación
 function initializeApp() {
-    const mainContainer = document.createElement('div');
-    mainContainer.id = 'main-container';
-    
-    const title = document.createElement('h1');
-    title.textContent = 'Buscador de Tipos Pokémon';
-    mainContainer.appendChild(title);
-    
-    const searchContainer = document.createElement('div');
-    searchContainer.className = 'search-container';
-    mainContainer.appendChild(searchContainer);
-
-    const resultsContainer = document.createElement('div');
-    resultsContainer.id = 'results-container';
-    mainContainer.appendChild(resultsContainer);
-
-    document.body.appendChild(mainContainer);
-    
     updateUI();
 }
 
