@@ -3,16 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/png" href="./img/Pokeball.png" />
+    <meta name="color-scheme" content="dark">
+    <meta name="description" content="Buscador de tipos Pokémon: efectividades al defender y al atacar de un tipo o de la combinación de dos, con la lista de Pokémon de cada tipo.">
+    <link rel="shortcut icon" type="image/png" href="./img/Pokeball.png">
     <title>Tabla de Tipos Pokémon</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="main-container">
-        <h1>Buscador de Tipos Pokémon</h1>
-        <div class="search-container"></div>
+        <header class="cabecera">
+            <img class="logo" src="./img/Pokeball.png" alt="">
+            <h1>Buscador de Tipos Pokémon</h1>
+            <p class="bajada">Elige uno o dos tipos y mira contra qué es débil o resistente, a quién daña y qué Pokémon comparten ese tipo.</p>
+        </header>
+        <div id="search-container"></div>
         <div id="results-container"></div>
+        <footer class="pie">
+            Datos de <a href="https://pokeapi.co" target="_blank" rel="noopener">PokéAPI</a>.
+            Pokémon y sus imágenes © Nintendo, Creatures Inc. y GAME FREAK Inc.
+        </footer>
     </div>
+    <noscript><p class="aviso" style="text-align:center">Esta herramienta necesita JavaScript activado.</p></noscript>
     <script src="script.js"></script>
 </body>
 </html>
